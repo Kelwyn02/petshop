@@ -9,4 +9,4 @@ pre-push:
   commands:
     validate:
       glob: '*.{ts,tsx}'
-      run: npm validate:typecheck
+      run: npm run validate:typecheck
