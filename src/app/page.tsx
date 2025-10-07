@@ -1,98 +1,17 @@
-import { PeriodSection } from '@/components/period-section';
-import { Appointment, AppointmentPeriod } from '@/types/appointment';
-import { Appointment as AppointmentPrisma } from '@/generated/prisma';
+import { PeriodSection } from '@/components/PeriodSection';
+//import { prisma } from '@/lib/prisma';
+import { groupAppointmentByPeriod } from '@/utils/appointment-utils';
+import { APPOINTMENT_DATA } from '@/utils/mock-data';
 
-const appointments = [
-  {
-    id: '1',
-    petName: 'Rex',
-    description: 'Consulta',
-    tutorName: 'João',
-    phone: '1234567890',
-    scheduleAt: new Date('2025-08-17T10:00:00'),
-  },
-  {
-    id: '2',
-    petName: 'Mimi',
-    tutorName: 'Maria',
-    description: 'Banho',
-    phone: '1234567890',
-    scheduleAt: new Date('2025-08-17T12:00:00'),
-  },
-  {
-    id: '3',
-    petName: 'Nina',
-    tutorName: 'Natalia',
-    description: 'Consulta',
-    phone: '1234567890',
-    scheduleAt: new Date('2025-08-17T16:00:00'),
-  },
-  {
-    id: '4',
-    petName: 'Nina',
-    tutorName: 'Natalia',
-    description: 'Consulta',
-    phone: '1234567890',
-    scheduleAt: new Date('2025-08-17T20:00:00'),
-  },
-];
+export default async function Home() {
+  //const appoint = await prisma.appointment.findMany();
+  //console.log(appoint);
 
-const getPeriod = (hour: number): 'morning' | 'afternoon' | 'evening' => {
-  if (hour >= 9 && hour < 12) return 'morning';
-  if (hour >= 13 && hour < 18) return 'afternoon';
-  return 'evening';
-};
-
-function groupAppointmentByPeriod(
-  appointments: AppointmentPrisma[]
-): AppointmentPeriod[] {
-  const transformedAppointments: Appointment[] = appointments.map((apt) => ({
-    ...apt,
-    time: apt.scheduleAt.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
-    period: getPeriod(apt.scheduleAt.getHours()),
-  }));
-
-  const morningAppointments = transformedAppointments.filter(
-    (apt) => apt.period === 'morning'
-  );
-  const afternoonAppointments = transformedAppointments.filter(
-    (apt) => apt.period === 'afternoon'
-  );
-  const eveningAppointments = transformedAppointments.filter(
-    (apt) => apt.period === 'evening'
-  );
-
-  return [
-    {
-      title: 'Manhã',
-      type: 'morning',
-      timeRange: '09h-12h',
-      appointments: morningAppointments,
-    },
-    {
-      title: 'Tarde',
-      type: 'afternoon',
-      timeRange: '13h-18h',
-      appointments: afternoonAppointments,
-    },
-    {
-      title: 'Noite', // Corrigido o título
-      type: 'evening',
-      timeRange: '19h-21h',
-      appointments: eveningAppointments,
-    },
-  ];
-}
-
-export default function Home() {
-  const periods = groupAppointmentByPeriod(appointments);
+  const periods = groupAppointmentByPeriod(APPOINTMENT_DATA);
 
   return (
     <div className="bg-background-primary p-6">
-      <div className="flex items-center justify-between md:mb-8">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-title-size text-content-primary mb-2">
             Sua Agenda
