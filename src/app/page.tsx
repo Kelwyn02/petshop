@@ -44,18 +44,16 @@ const getPeriod = (hour: number): 'morning' | 'afternoon' | 'evening' => {
 };
 
 function groupAppointmentByPeriod(
-  appointmentsData: AppointmentPrisma[]
+  appointments: AppointmentPrisma[]
 ): AppointmentPeriod[] {
-  const transformedAppointments: Appointment[] = appointmentsData.map(
-    (apt) => ({
-      ...apt,
-      time: apt.scheduleAt.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      period: getPeriod(apt.scheduleAt.getHours()),
-    })
-  );
+  const transformedAppointments: Appointment[] = appointments.map((apt) => ({
+    ...apt,
+    time: apt.scheduleAt.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+    period: getPeriod(apt.scheduleAt.getHours()),
+  }));
 
   const morningAppointments = transformedAppointments.filter(
     (apt) => apt.period === 'morning'
