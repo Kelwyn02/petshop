@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -25,6 +25,7 @@ import {
   ChevronDown,
   Clock,
   Dog,
+  Loader2,
   Phone,
   User,
 } from 'lucide-react';
@@ -85,6 +86,7 @@ export function AppointmentForm() {
       phone: '',
       description: '',
       scheduleAt: undefined,
+      time: '',
     },
   });
 
@@ -303,7 +305,18 @@ export function AppointmentForm() {
               />
             </div>
 
-            <Button type="submit">Salvar</Button>
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                variant="brand"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                )}
+                Agendar
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
