@@ -44,12 +44,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import { toast } from 'sonner';
 
 const appointmentFormSchema = z
   .object({
     tutorName: z.string().min(3, 'O nome do tutor é obrigatório'),
-    petName: z.string().min(11, 'O nome do pet é obrigatório'),
-    phone: z.string().min(3, 'O telefone é obrigatório'),
+    petName: z.string().min(3, 'O nome do pet é obrigatório'),
+    phone: z.string().min(11, 'O telefone é obrigatório'),
     description: z.string().min(3, 'A descrição é obrigatória'),
     scheduleAt: z
       .date({
@@ -91,6 +92,13 @@ export function AppointmentForm() {
   });
 
   const onSubmit = (data: appointmentFormValues) => {
+    const [hour, minute] = data.time.split(':');
+
+    const scheduleAt = new Date(data.scheduleAt);
+    scheduleAt.setHours(Number(hour), Number(minute), 0, 0);
+
+    toast.success(`Agendamento criado com sucesso!`);
+
     console.log(data);
   };
 
