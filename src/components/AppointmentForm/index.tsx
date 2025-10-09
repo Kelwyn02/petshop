@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -45,6 +45,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { toast } from 'sonner';
+import { CreateAppointment } from '@/app/actions';
 
 const appointmentFormSchema = z
   .object({
@@ -91,14 +92,18 @@ export function AppointmentForm() {
     },
   });
 
-  const onSubmit = (data: appointmentFormValues) => {
+  const onSubmit = async (data: appointmentFormValues) => {
     const [hour, minute] = data.time.split(':');
 
     const scheduleAt = new Date(data.scheduleAt);
     scheduleAt.setHours(Number(hour), Number(minute), 0, 0);
 
-    toast.success(`Agendamento criado com sucesso!`);
+    await CreateAppointment({
+      ...data,
+      scheduleAt,
+    });
 
+    toast.success(`Agendamento criado com sucesso!`);
     console.log(data);
   };
 
