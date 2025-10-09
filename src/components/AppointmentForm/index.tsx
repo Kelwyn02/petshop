@@ -46,7 +46,8 @@ import {
 } from '../ui/select';
 import { toast } from 'sonner';
 import { CreateAppointment } from '@/app/actions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Appointment } from '@/generated/prisma';
 
 const appointmentFormSchema = z
   .object({
@@ -80,7 +81,15 @@ const appointmentFormSchema = z
 
 type appointmentFormValues = z.infer<typeof appointmentFormSchema>;
 
-export function AppointmentForm() {
+type AppointmentFormProps = {
+  appointment: Appointment;
+  children?: React.ReactNode;
+};
+
+export const AppointmentForm = ({
+  appointment,
+  children,
+}: AppointmentFormProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<appointmentFormValues>({
@@ -94,6 +103,10 @@ export function AppointmentForm() {
       time: '',
     },
   });
+
+  useEffect(() => {
+    form.reset(appointment);
+  }, [appointment, form]);
 
   const onSubmit = async (data: appointmentFormValues) => {
     const [hour, minute] = data.time.split(':');
@@ -119,9 +132,8 @@ export function AppointmentForm() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="brand">Novo Agendamento</Button>
-      </DialogTrigger>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
+
       <DialogContent
         variant="appointment"
         overlayVariant="blurred"
@@ -345,7 +357,7 @@ export function AppointmentForm() {
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 const generateTimeOptions = (): string[] => {
   const times = [];
