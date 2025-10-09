@@ -28,7 +28,7 @@ export async function CreateAppointment(data: AppointmentData) {
     if (!isMorning && !isAfternoon && !isEvening) {
       return {
         error:
-          'Agendamentos só podem ser feitos entre 9h e 12h, 13h e 18 ou 19h e 23h',
+          'Agendamentos só podem ser feitos entre 9h e 12h, 13h e 18h ou 19h e 23h',
       };
     }
 
