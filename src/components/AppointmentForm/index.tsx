@@ -82,8 +82,8 @@ const appointmentFormSchema = z
 type appointmentFormValues = z.infer<typeof appointmentFormSchema>;
 
 type AppointmentFormProps = {
-  appointment: Appointment;
-  children?: React.ReactNode;
+  appointment?: Appointment;
+  children: React.ReactNode;
 };
 
 export const AppointmentForm = ({
