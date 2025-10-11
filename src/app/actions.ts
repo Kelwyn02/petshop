@@ -52,11 +52,10 @@ export async function CreateAppointment(data: AppointmentData) {
     revalidatePath('/');
   } catch (error) {
     console.log(error);
+    return {
+      error: 'Erro ao criar o agendamento. Tente novamente.',
+    };
   }
-
-  return {
-    error: 'Erro ao criar o agendamento. Tente novamente.',
-  };
 }
 
 export async function UpdateAppointment(id: string, data: AppointmentData) {
