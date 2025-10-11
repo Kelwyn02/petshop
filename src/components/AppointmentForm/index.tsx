@@ -45,7 +45,7 @@ import {
   SelectValue,
 } from '../ui/select';
 import { toast } from 'sonner';
-import { CreateAppointment } from '@/app/actions';
+import { CreateAppointment, UpdateAppointment } from '@/app/actions';
 import { useEffect, useState } from 'react';
 import { Appointment } from '@/generated/prisma';
 
@@ -114,17 +114,26 @@ export const AppointmentForm = ({
     const scheduleAt = new Date(data.scheduleAt);
     scheduleAt.setHours(Number(hour), Number(minute), 0, 0);
 
-    const result = await CreateAppointment({
-      ...data,
-      scheduleAt,
-    });
+    const isEdit = !!appointment?.id;
+
+    const result = isEdit
+      ? await UpdateAppointment(appointment.id, {
+          ...data,
+          scheduleAt,
+        })
+      : await CreateAppointment({
+          ...data,
+          scheduleAt,
+        });
 
     if (result?.error) {
       toast.error(result.error);
       return;
     }
 
-    toast.success(`Agendamento criado com sucesso!`);
+    toast.success(
+      `Agendamento ${isEdit ? 'atualizado' : 'criado'} com sucesso!`
+    );
 
     setIsOpen(false);
     form.reset();
